@@ -200,6 +200,7 @@ typedef enum debug_level {
 	LEVEL_BASIC,    /*printk basic tp debug info*/
 	LEVEL_DETAIL,   /*printk tp detail log for stress test*/
 	LEVEL_DEBUG,    /*printk all tp debug info*/
+	LEVEL_DEBUG_SC_OFF, /*printk screen off debug info*/
 } tp_debug_level;
 
 typedef enum {
@@ -1029,6 +1030,7 @@ struct touchpanel_data {
 	struct work_struct lcd_trigger_load_tp_fw_work;
 	/*trigger laod tp fw by lcd driver after lcd reset*/
 	struct workqueue_struct *lcd_trigger_load_tp_fw_wq;
+	bool lpwg_fw_support;				    /*feature to support td4377 lpwg_fw_support*/
 
 	/******For auto test area********/
 	bool in_test_process;                     /*flag whether in test process*/

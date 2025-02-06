@@ -864,6 +864,14 @@ static void dsi_display_set_cmd_tx_ctrl_flags(struct dsi_display *display,
 		 */
 		if (display->panel->panel_mode == DSI_OP_VIDEO_MODE) {
 			flags |= DSI_CTRL_CMD_CUSTOM_DMA_SCHED;
+#ifdef OPLUS_FEATURE_DISPLAY
+			//MIPI_DCS_SET_DISPLAY_BRIGHTNES
+			if ((display->panel->oplus_priv.vidmode_backlight_async_wait_enable)
+				&& (atomic_read(&display->panel->vidmode_backlight_async_wait))
+				&& (((unsigned char*)(msg->tx_buf))[0] == 0x51)) {
+				flags |= DSI_CTRL_CMD_ASYNC_WAIT;
+			}
+#endif /* OPLUS_FEATURE_DISPLAY */
 		} else {
 			if (msg->flags & MIPI_DSI_MSG_CMD_DMA_SCHED)
 				flags |= DSI_CTRL_CMD_CUSTOM_DMA_SCHED;
@@ -1247,6 +1255,12 @@ int dsi_display_check_status(struct drm_connector *connector, void *display,
 #ifdef OPLUS_FEATURE_DISPLAY
 	if (atomic_read(&panel->esd_pending)) {
 		DSI_WARN("Skip the check because esd is pending\n");
+		if (!strcmp(dsi_display->panel->name, "AB964 p 1 A0017 dsc video mode panel")) {
+			if (dsi_display->panel->oplus_priv.set_backlight_not_do_esd_reg_read_enable
+			&& dsi_display->panel->panel_mode == DSI_OP_VIDEO_MODE) {
+				atomic_set(&panel->esd_pending, 0);
+			}
+		}
 		goto release_panel_lock;
 	}
 	if (panel->power_mode != SDE_MODE_DPMS_ON) {

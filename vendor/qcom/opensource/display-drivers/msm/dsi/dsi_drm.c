@@ -210,11 +210,7 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 
 #ifdef OPLUS_FEATURE_DISPLAY
 	if (!strcmp(c_bridge->display->panel->name, "AB964 p 1 A0017 dsc video mode panel")) {
-		if (c_bridge->dsi_mode.timing.refresh_rate == 60) {
-			mutex_lock(&c_bridge->display->display_lock);
-			oplus_panel_switch_vid_mode(c_bridge->display, &(c_bridge->dsi_mode));
-			mutex_unlock(&c_bridge->display->display_lock);
-		}
+		DSI_DEBUG("This is AB964, skip\n");
 	} else {
 		mutex_lock(&c_bridge->display->display_lock);
 		oplus_panel_switch_vid_mode(c_bridge->display, &(c_bridge->dsi_mode));
@@ -233,7 +229,7 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 
 #ifdef OPLUS_FEATURE_DISPLAY
 	if (!strcmp(c_bridge->display->panel->name, "AB964 p 1 A0017 dsc video mode panel")) {
-		if (c_bridge->dsi_mode.timing.refresh_rate == 120) {
+		if (c_bridge->dsi_mode.timing.refresh_rate == 120 || c_bridge->dsi_mode.timing.refresh_rate == 60) {
 			mutex_lock(&c_bridge->display->display_lock);
 			oplus_panel_switch_vid_mode(c_bridge->display, &(c_bridge->dsi_mode));
 			mutex_unlock(&c_bridge->display->display_lock);
